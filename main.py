@@ -60,6 +60,20 @@ while True:
             baralho.darJogadores(j)
             mesa.mostrarCartas()
             for i in range(0,nj):
+                if j[i].bb == True:
+                    print("Faça a aposta inicial: ")
+                    j[i].aposta(mesa, x)
+                while True:
+                    print("O jogador deseja: \n 1. Aumentar a aposta; \n 2. Cobrir a aposta; \n 3. Desistir?")
+                    opcao = int(input())
+                    if opcao == 1:
+                        j[i].aumentarAposta(mesa, x)
+                    elif opcao == 2:
+                        j[i].cobrirAposta(mesa)
+                    elif opcao == 3:
+                        j[i].desistir()
+                    else:
+                        print("Opção inválida")
                 print("Jogador %d:" % (i+1))
                 j[i].mostrarMao()
             regras.posicao(rodada)
@@ -68,4 +82,3 @@ while True:
             for i in range(0,nj):
                 print("Jogador %d: %d" % (i+1, j[i].dinheiro))
             rodada += 1
-            jogo = False
