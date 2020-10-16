@@ -15,17 +15,6 @@ bard = [Card(2,"d"),Card(3,"d"),Card(4,"d"),Card(5,"d"),Card(6,"d"),Card(7,"d"),
 
 bar = bars + barh + barc + bard
 
-'''def gerar_cartas():
-    valor = ["ás","dois","três","quatro","cinco","seis","sete","oito","nove","dez","valete","dama","rei"]
-    naipe = ["espadas","copas","ouros","paus"]
-    l = []
-    for n in range(4):
-        for v in range(13):
-            nome_carta = valor[v] + " de " + naipe[n]
-            l.append(nome_carta)
-    return l
-'''
-#bar = gerar_cartas()
 j = []
 for k in range(1,11):
     player = Jogador()
@@ -59,26 +48,35 @@ while True:
             baralho.darMesa(mesa)
             baralho.darJogadores(j)
             mesa.mostrarCartas()
+            #determinar a ordem das apostas
+            novalista = [0]*nj
             for i in range(0,nj):
-                if j[i].bb == True:
+                if j[i].sb == True:
+                    inicio = j[i]
+                    break
+            for i in range(0,nj):
+                novalista[i] = j[(i + inicio) % nj]
+            for i in range(0,nj):
+                if i == 0:
                     print("Faça a aposta inicial: ")
-                    j[i].aposta(mesa, x)
-                while True:
-                    print("O jogador deseja: \n 1. Aumentar a aposta; \n 2. Cobrir a aposta; \n 3. Desistir?")
-                    opcao = int(input())
-                    if opcao == 1:
-                        j[i].aumentarAposta(mesa, x)
-                    elif opcao == 2:
-                        j[i].cobrirAposta(mesa)
-                    elif opcao == 3:
-                        j[i].desistir()
-                    else:
-                        print("Opção inválida")
-                print("Jogador %d:" % (i+1))
-                j[i].mostrarMao()
+                    novalista[i].aposta(mesa, x)
+                else:
+                    while True:
+                        print("O jogador deseja: \n 1. Aumentar a aposta; \n 2. Cobrir a aposta; \n 3. Desistir?")
+                        opcao = int(input())
+                        if opcao == 1:
+                            novalista[i].aumentarAposta(mesa, x)
+                        elif opcao == 2:
+                            novalista[i].cobrirAposta(mesa)
+                        elif opcao == 3:
+                            novalista[i].desistir()
+                        else:
+                            print("Opção inválida")
+                    print("Jogador %d:" % (i+1))
+                    novalista[i].mostrarMao()
             regras.posicao(rodada)
-            regras.pontuacao(j, mesa)
-            mesa.distribuirDinheiro(j)
+            regras.pontuacao(novalista, mesa)
+            mesa.distribuirDinheiro(novalista)
             for i in range(0,nj):
-                print("Jogador %d: %d" % (i+1, j[i].dinheiro))
+                print("Jogador %d: %d" % (i+1, novalista[i].dinheiro))
             rodada += 1
